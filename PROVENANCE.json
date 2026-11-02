@@ -1,0 +1,51 @@
+{
+  "source_dataset_revision": "61bcbdd80989bca9260acba5c99b8fd0293200ee",
+  "adaptations": "Portable experiment paths, CPU/CUDA selection, NPZ MLP checkpoints, integrity-checked resumption; original numerical methods retained.",
+  "files": [
+    {
+      "source": "dataset/research/code_archive/src/common.py",
+      "file": "src/common.py",
+      "original_sha256": "48bebb029db4e4e3917a470bffa327118ba6765de74d5be7e335bbb2d26ee36b"
+    },
+    {
+      "source": "dataset/research/code_archive/src/mlp_engine.py",
+      "file": "src/mlp_engine.py",
+      "original_sha256": "ff1ad50a238fcbdb6c5b3661d3057bf2a4488963b9addd01986a9b9e8ca9d0d3"
+    },
+    {
+      "source": "dataset/research/code_archive/src/kriging_engine.py",
+      "file": "src/kriging_engine.py",
+      "original_sha256": "bf5905ef94db2c346cb66c1809b2096777250d02ad3382f64f6448e8589b804d"
+    },
+    {
+      "source": "dataset/research/code_archive/src/test_kriging_engine.py",
+      "file": "src/test_kriging_engine.py",
+      "original_sha256": "636c8ab70194c3090579adadd450954334d990d86bb2a8a33b6f998b8060b390"
+    },
+    {
+      "source": "dataset/research/code_archive/run_mlp_study.py",
+      "file": "run_mlp_study.py",
+      "original_sha256": "9ac062fc568260cea081b3bbaddfa5d5dc897d8ef194047c963c94002d8eb3f5"
+    },
+    {
+      "source": "dataset/research/code_archive/run_kriging_study.py",
+      "file": "run_kriging_study.py",
+      "original_sha256": "36ba1a1d4440e5fb9e361c7f168f5d72645a03db56f5ae7e7c1e8b25bc9118a6"
+    },
+    {
+      "source": "dataset/research/code_archive/evaluate_study.py",
+      "file": "evaluate_study.py",
+      "original_sha256": "0f97a64563f36559a66fff03411d5a6c7d658495191cffa0a8e678ab453c7a12"
+    },
+    {
+      "source": "dataset/research/code_archive/make_figures.py",
+      "file": "make_figures.py",
+      "original_sha256": "cb76a45613a7ffaab5522b3616ec78ee525cd740ec3cedb15dd1f5df1e171b3a"
+    },
+    {
+      "source": "dataset/research/code_archive/plot_relative_error_learning.py",
+      "file": "plot_relative_error_learning.py",
+      "original_sha256": "bb2020a923b6d257f82ec139db079fd434f11004abbbee35aab78f77fc5ade1d"
+    }
+  ]
+}

@@ -1,0 +1,323 @@
+{
+  "study": "R05",
+  "date": "2026-10-13",
+  "features": [
+    "U0",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "U5",
+    "U6",
+    "U7",
+    "U8",
+    "U9",
+    "L0",
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5",
+    "L6",
+    "L7",
+    "L8",
+    "L9"
+  ],
+  "targets": [
+    "CL",
+    "CD"
+  ],
+  "derived_target": "L_D = CL / CD",
+  "train_n": 10000,
+  "validation_n": 500,
+  "test_n": 1500,
+  "split_seed": 20261013,
+  "seeds": [
+    11,
+    22,
+    33
+  ],
+  "budgets": [
+    50,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000,
+    10000
+  ],
+  "candidates": [
+    {
+      "hidden": [
+        16,
+        16
+      ],
+      "activation": "tanh",
+      "skip": true,
+      "dropout": 0.0,
+      "weight_decay": 0.001,
+      "learning_rate": 0.002,
+      "epochs": 4000,
+      "minimum_epochs": 1200,
+      "patience": 800,
+      "batch_size": 0,
+      "log_cd": false,
+      "ratio_weight": 0.0,
+      "lbfgs_steps": 250,
+      "lbfgs_l2": 1e-07,
+      "validation_interval": 20,
+      "id": "M01_small16"
+    },
+    {
+      "hidden": [
+        32,
+        32
+      ],
+      "activation": "tanh",
+      "skip": true,
+      "dropout": 0.0,
+      "weight_decay": 0.001,
+      "learning_rate": 0.002,
+      "epochs": 4000,
+      "minimum_epochs": 1200,
+      "patience": 800,
+      "batch_size": 0,
+      "log_cd": false,
+      "ratio_weight": 0.0,
+      "lbfgs_steps": 250,
+      "lbfgs_l2": 1e-07,
+      "validation_interval": 20,
+      "id": "M02_medium32"
+    },
+    {
+      "hidden": [
+        64,
+        64
+      ],
+      "activation": "tanh",
+      "skip": true,
+      "dropout": 0.0,
+      "weight_decay": 0.001,
+      "learning_rate": 0.002,
+      "epochs": 4000,
+      "minimum_epochs": 1200,
+      "patience": 800,
+      "batch_size": 0,
+      "log_cd": false,
+      "ratio_weight": 0.0,
+      "lbfgs_steps": 250,
+      "lbfgs_l2": 1e-07,
+      "validation_interval": 20,
+      "id": "M03_wide64"
+    },
+    {
+      "hidden": [
+        64,
+        64,
+        64
+      ],
+      "activation": "tanh",
+      "skip": true,
+      "dropout": 0.0,
+      "weight_decay": 0.001,
+      "learning_rate": 0.002,
+      "epochs": 4000,
+      "minimum_epochs": 1200,
+      "patience": 800,
+      "batch_size": 0,
+      "log_cd": false,
+      "ratio_weight": 0.0,
+      "lbfgs_steps": 250,
+      "lbfgs_l2": 1e-07,
+      "validation_interval": 20,
+      "id": "M04_deep64"
+    },
+    {
+      "hidden": [
+        128,
+        128,
+        64
+      ],
+      "activation": "tanh",
+      "skip": true,
+      "dropout": 0.0,
+      "weight_decay": 0.001,
+      "learning_rate": 0.002,
+      "epochs": 2500,
+      "minimum_epochs": 800,
+      "patience": 600,
+      "batch_size": 0,
+      "log_cd": false,
+      "ratio_weight": 0.0,
+      "lbfgs_steps": 250,
+      "lbfgs_l2": 1e-07,
+      "validation_interval": 20,
+      "id": "M05_wide128"
+    },
+    {
+      "hidden": [
+        64,
+        64
+      ],
+      "activation": "silu",
+      "skip": true,
+      "dropout": 0.0,
+      "weight_decay": 0.001,
+      "learning_rate": 0.002,
+      "epochs": 4000,
+      "minimum_epochs": 1200,
+      "patience": 800,
+      "batch_size": 0,
+      "log_cd": false,
+      "ratio_weight": 0.0,
+      "lbfgs_steps": 250,
+      "lbfgs_l2": 1e-07,
+      "validation_interval": 20,
+      "id": "M06_silu64"
+    },
+    {
+      "hidden": [
+        64,
+        64
+      ],
+      "activation": "tanh",
+      "skip": false,
+      "dropout": 0.0,
+      "weight_decay": 0.001,
+      "learning_rate": 0.002,
+      "epochs": 4000,
+      "minimum_epochs": 1200,
+      "patience": 800,
+      "batch_size": 0,
+      "log_cd": false,
+      "ratio_weight": 0.0,
+      "lbfgs_steps": 250,
+      "lbfgs_l2": 1e-07,
+      "validation_interval": 20,
+      "id": "M07_plain64"
+    },
+    {
+      "hidden": [
+        64,
+        64
+      ],
+      "activation": "tanh",
+      "skip": true,
+      "dropout": 0.0,
+      "weight_decay": 0.001,
+      "learning_rate": 0.002,
+      "epochs": 4000,
+      "minimum_epochs": 1200,
+      "patience": 800,
+      "batch_size": 0,
+      "log_cd": true,
+      "ratio_weight": 0.0,
+      "lbfgs_steps": 250,
+      "lbfgs_l2": 1e-07,
+      "validation_interval": 20,
+      "id": "M08_logcd64"
+    },
+    {
+      "hidden": [
+        64,
+        64
+      ],
+      "activation": "tanh",
+      "skip": true,
+      "dropout": 0.0,
+      "weight_decay": 0.001,
+      "learning_rate": 0.002,
+      "epochs": 4000,
+      "minimum_epochs": 1200,
+      "patience": 800,
+      "batch_size": 0,
+      "log_cd": false,
+      "ratio_weight": 0.5,
+      "lbfgs_steps": 250,
+      "lbfgs_l2": 1e-07,
+      "validation_interval": 20,
+      "id": "M09_ratio64"
+    },
+    {
+      "hidden": [
+        64,
+        64
+      ],
+      "activation": "tanh",
+      "skip": true,
+      "dropout": 0.0,
+      "weight_decay": 0.01,
+      "learning_rate": 0.002,
+      "epochs": 4000,
+      "minimum_epochs": 1200,
+      "patience": 800,
+      "batch_size": 0,
+      "log_cd": false,
+      "ratio_weight": 0.0,
+      "lbfgs_steps": 250,
+      "lbfgs_l2": 1e-07,
+      "validation_interval": 20,
+      "id": "M10_decay64"
+    },
+    {
+      "hidden": [
+        64,
+        64
+      ],
+      "activation": "tanh",
+      "skip": true,
+      "dropout": 0.0,
+      "weight_decay": 1e-05,
+      "learning_rate": 0.002,
+      "epochs": 4000,
+      "minimum_epochs": 1200,
+      "patience": 800,
+      "batch_size": 0,
+      "log_cd": false,
+      "ratio_weight": 0.0,
+      "lbfgs_steps": 250,
+      "lbfgs_l2": 0.0,
+      "validation_interval": 20,
+      "id": "M11_weakdecay64"
+    },
+    {
+      "hidden": [
+        128,
+        128,
+        64
+      ],
+      "activation": "silu",
+      "skip": false,
+      "dropout": 0.1,
+      "weight_decay": 0.1,
+      "learning_rate": 0.001,
+      "epochs": 2800,
+      "minimum_epochs": 600,
+      "patience": 280,
+      "batch_size": 256,
+      "log_cd": false,
+      "ratio_weight": 2.0,
+      "lbfgs_steps": 0,
+      "lbfgs_l2": 1e-07,
+      "validation_interval": 20,
+      "id": "M12_old_configuration"
+    }
+  ],
+  "selection": "Screen all candidates on N=10000/seed11 using validation mean of three RMSE normalized by current TRAIN target std; confirm best 3 configurations with seeds22,33, then select lowest mean validation score. Seed11 is preassigned single representative. No final test evaluation before freeze.",
+  "mlp_training": "AdamW with cosine learning rate, evaluation checkpoints; optional full-batch float64 LBFGS polishing. Checkpoints selected by validation only. Final inference never clips CD.",
+  "kriging": "Exact independent-output isotropic Matern5/2 with fitted signal/noise/lengthscale; training-only scaling, marginal-likelihood optimization, documented starts/termination/jitter. No sparse substitution.",
+  "learning_curve": "Paired nested train subsets for both models; current train-only scalers; fixed 500 validation at every N; horizontal axis actual training N, total non-test fine labels N+500.",
+  "extra_studies": [
+    "Architecture/optimization ablations",
+    "Three-seed variability and optional mean ensemble",
+    "Tail errors versus geometry and distance to training samples",
+    "Prediction cost and data-efficiency thresholds"
+  ],
+  "test_policy": "LHS_2000 was historically evaluated in R01-R04; current1500 subset is locked within R05, not a never-used global blind test. It cannot be used to select configurations or force a crossover.",
+  "scope": "Same design domain and Case9 fine CFD label approximation; not wind-tunnel truth, extrapolation, new-condition validation or shape optimization.",
+  "source_npz_sha256": {
+    "LHS_10000_valid.npz": "b266037632c54546074f1055fb653667db1d363d78a0e2b15e77b9ec95c98763",
+    "LHS_2000_valid.npz": "7b8728ed6fde037e0c932b267bd8312fd6ceed56fa08a6972c90ea6dc088446e"
+  }
+}

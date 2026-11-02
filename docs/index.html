@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Explore CST airfoil geometry, aerodynamic surrogate predictions, and MLP–Kriging learning curves.">
+  <title>RAE2822 · Surrogate Benchmark</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+<header><a class="brand" href="#">RAE2822 <span>/ SURROGATE BENCHMARK</span></a><nav><a href="#explorer">Airfoils</a><a href="#learning">Learning curves</a><a href="https://github.com/ShuangheYang/rae2822-surrogate-benchmark">Code ↗</a></nav></header>
+<main>
+  <section class="hero">
+    <p class="eyebrow">AERODYNAMICS · DATA · MACHINE LEARNING</p>
+    <h1>From airfoil geometry<br>to aerodynamic prediction.</h1>
+    <p class="lead">A reproducible comparison of a multilayer perceptron and exact isotropic Kriging in a 20-dimensional CST design space.</p>
+    <div class="facts"><div><strong>10,000</strong><span>training geometries</span></div><div><strong>500 + 1,500</strong><span>validation + test cases</span></div><div><strong>2</strong><span>learned outputs: C<sub>L</sub>, C<sub>D</sub></span></div></div>
+    <img src="assets/airfoil_design_space.png" alt="RAE2822 CST design space with example shapes and parameter variation" width="1600" loading="eager">
+    <div class="links"><a href="https://huggingface.co/datasets/ShuangheYang/rae2822-cst20-cfl3d-fine">Explore the dataset ↗</a><a href="https://huggingface.co/datasets/ShuangheYang/rae2822-cst20-cfl3d-fine/resolve/61bcbdd80989bca9260acba5c99b8fd0293200ee/research/report/R05_MLP_Kriging_report.pdf">Read the illustrated report ↗</a></div>
+  </section>
+  <p id="status" role="status">Loading verified experiment records…</p>
+  <section id="explorer" class="panel">
+    <p class="eyebrow">01 / INTERACTIVE AIRFOIL EXPLORER</p>
+    <h2>Inspect a test geometry.</h2>
+    <p>Choose one of the 1,500 test cases. The shape is reconstructed from its CST coefficients. Values below are saved predictions from the 10,000-sample, seed-11 models.</p>
+    <div class="controls"><label>Test case <select id="case" disabled aria-label="Test airfoil ID"></select></label><button id="previous" disabled aria-label="Previous airfoil">← Previous</button><button id="next" disabled aria-label="Next airfoil">Next →</button><label><input id="baseline" type="checkbox" checked> Show RAE2822 baseline</label></div>
+    <div class="plot"><svg id="airfoil" viewBox="0 0 1000 300" role="img" aria-label="Selected airfoil geometry"></svg></div>
+    <p class="caption">Normalized coordinates; equal horizontal and vertical geometric scales. Purple: selected airfoil. Dashed gray: baseline.</p>
+    <div class="table-wrap"><table><thead><tr><th>Quantity</th><th>Fine CFD label</th><th>MLP</th><th>MLP APE</th><th>Kriging</th><th>Kriging APE</th></tr></thead><tbody id="predictions"></tbody></table></div>
+    <details><summary>CST coefficients · U0–U9, L0–L9</summary><pre id="coefficients"></pre></details>
+    <p class="note">These are stored benchmark predictions, not live CFD or server-side model inference. C<sub>L</sub>/C<sub>D</sub> is calculated from the two predicted coefficients.</p>
+  </section>
+  <section id="learning" class="panel">
+    <p class="eyebrow">02 / DATA AND PREDICTIVE ACCURACY</p><h2>How does accuracy change with data?</h2>
+    <div class="controls"><label>Metric <select id="metric"><option value="E2">Normalized two-output error E₂ (%)</option><option value="CL">Lift coefficient MAPE (%)</option><option value="CD">Drag coefficient MAPE (%)</option><option value="L_D">Lift-to-drag MAPE (%)</option></select></label></div>
+    <div class="plot"><svg id="curve" viewBox="0 0 1000 470" role="img" aria-label="Learning curves for MLP and Kriging"></svg></div>
+    <p class="caption">Both axes are logarithmic. Points are means of three paired records; hover or focus a point for values and between-record standard deviation. At 10,000 samples, Kriging records reuse one canonical fit.</p>
+    <div class="legend"><span class="purple">● MLP</span><span class="teal">■ Kriging</span></div>
+    <p id="curve-note" class="note"></p>
+    <details><summary>Read the metric definitions</summary><p>MAPE = (100/N) Σ |(prediction − CFD label) / CFD label|. E₂ = 50 × (RMSE<sub>CL</sub>/s<sub>CL,test</sub> + RMSE<sub>CD</sub>/s<sub>CD,test</sub>). The standard deviations use the same test labels for all models. E₂ is a normalized error, not a mean relative error.</p></details>
+  </section>
+  <section class="about"><p class="eyebrow">03 / EXPERIMENTAL CONTEXT</p><h2>One design domain. One flow condition.</h2><div class="columns"><div><h3>The data</h3><p>CFL3D fine-mesh labels at Mach 0.73, Reynolds number 6.5 million and angle of attack 2.79°. Independent Latin hypercube pools share the same parameter bounds. Paired coarse labels are also available on Hugging Face.</p></div><div><h3>The models</h3><p>MLP: 20–64–64–64–2 with Tanh and a linear branch. Kriging: independent CL/CD outputs with exact isotropic Matérn-5/2 covariance and training-likelihood hyperparameter fitting.</p></div><div><h3>The interpretation</h3><p>Results describe these two pipelines and CFD labels in this domain. All budgets have 500 additional validation labels. The evaluation pool has prior research exposure. The CFD-generation platform is not distributed.</p></div></div></section>
+</main>
+<footer><span>RAE2822 Surrogate Benchmark · Shuanghe Yang</span><a href="https://github.com/ShuangheYang/rae2822-surrogate-benchmark/blob/main/METHODS.md">Methods, scope & references ↗</a></footer>
+</body></html>

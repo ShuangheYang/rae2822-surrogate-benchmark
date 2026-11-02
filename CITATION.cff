@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "Please cite this software and the data/model revisions used in your experiment."
+title: "RAE2822 Surrogate Benchmark"
+type: software
+authors:
+  - family-names: Yang
+    given-names: Shuanghe
+license: MIT
+repository-code: "https://github.com/ShuangheYang/rae2822-surrogate-benchmark"
+version: 0.1.0
+date-released: 2026-11-02
