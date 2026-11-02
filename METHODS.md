@@ -53,6 +53,20 @@ The RMSE reduction is $G_q=100\%(1-\mathrm{RMSE}_{q,\mathrm{MLP}}/\mathrm{RMSE}_
 
 Warm inference timing synchronizes CUDA work, uses already loaded models, includes scaling and output transfer, and reports medians over repeated calls. It excludes model loading, file reading, mesh generation and CFD. Reproduction timings depend on hardware and concurrent workloads.
 
+## Coordinate inputs and browser inference
+
+Browser inputs use the same 20-coefficient ordering, class function, polynomial degree and scaler parameters as the released models. Let $B_{ij}=x_i^{1/2}(1-x_i)\binom{9}{j}x_i^j(1-x_i)^{9-j}$. For each surface, coordinate fitting solves
+
+$$\widehat{\mathbf a}_s=\operatorname*{arg\,min}_{\mathbf a_s}\|B\mathbf a_s-\mathbf y_s\|_2^2.$$
+
+Column-pivoted Householder QR solves this unconstrained least-squares problem. The interface does not clip coefficients into the design box: doing so would change the supplied geometry. Chord translation, rotation (when specified) and a common scale for both axes preserve the shape. Auto-normalization assumes a horizontal, closed airfoil; manual leading/trailing-edge coordinates define the chord of rotated input.
+
+The coordinate adapter requires at least 30 distinct x positions on each surface, endpoint coverage, finite values, monotone surface branches and no surface crossing. It rejects an open leading/trailing edge. Engineering gates require per-surface fit RMSE at most $5\times10^{-4}c$ and maximum deviation at the supplied points at most $2\times10^{-3}c$. The reconstructed geometry must have maximum thickness between 0.04 and 0.25 chord and maximum absolute camber no greater than 0.10 chord. These broad sanity gates do not extend the model's validated domain. The design-box check is separate; outside-box inference requires an explicit exploration choice and has no validated accuracy estimate.
+
+The MLP implementation evaluates the original dense Tanh layers and linear branch in float64. Kriging evaluates the exact predictive mean using all 10,000 stored centers and the already solved coefficients; it does not refit a kernel in the browser. Both inverse-transform CL and CD before computing their ratio. Browser timing is not the GPU deployment timing reported in the study.
+
+The JavaScript implementation and coordinate adapter have numerical parity and malformed-input tests. Model hashes are checked at load time. New inputs have no associated CFD truth: fit errors measure geometric approximation, not aerodynamic prediction error.
+
 ## Reproduction and interpretation
 
 This repository adapts the released research algorithms for portable paths, CPU execution and pickle-free checkpoints. Existing model weights and scientific results are not refitted during packaging. Public artifact revisions and hashes are pinned. Exact bitwise training reproduction across different hardware and PyTorch versions is not promised; record the environment and compare numerical predictions.

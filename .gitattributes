@@ -3,3 +3,4 @@
 *.pdf -text
 *.npz -text
 *.xlsx -text
+*.bin -text

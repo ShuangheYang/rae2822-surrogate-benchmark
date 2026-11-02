@@ -1,0 +1,335 @@
+{
+  "schema": 1,
+  "precision": "IEEE 754 float64; no quantization",
+  "features": [
+    "U0",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "U5",
+    "U6",
+    "U7",
+    "U8",
+    "U9",
+    "L0",
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5",
+    "L6",
+    "L7",
+    "L8",
+    "L9"
+  ],
+  "outputs": [
+    "CL",
+    "CD",
+    "CL/CD"
+  ],
+  "condition": {
+    "Mach": 0.73,
+    "Reynolds": 6500000,
+    "AoA_deg": 2.79
+  },
+  "bounds": {
+    "order": [
+      "U0",
+      "U1",
+      "U2",
+      "U3",
+      "U4",
+      "U5",
+      "U6",
+      "U7",
+      "U8",
+      "U9",
+      "L0",
+      "L1",
+      "L2",
+      "L3",
+      "L4",
+      "L5",
+      "L6",
+      "L7",
+      "L8",
+      "L9"
+    ],
+    "class_exponents": [
+      0.5,
+      1.0
+    ],
+    "bernstein_degree": 9,
+    "baseline": [
+      0.1304833100141988,
+      0.1267487492881892,
+      0.1544658673608026,
+      0.1693189074129835,
+      0.1133923785033974,
+      0.2744190902931604,
+      0.1141372724730599,
+      0.2429949687686427,
+      0.1682439674119772,
+      0.2220791641660549,
+      -0.131503239944894,
+      -0.1250165502806442,
+      -0.1850957644420926,
+      -0.04650160371472781,
+      -0.3685650767694991,
+      0.0382994293649823,
+      -0.2182171742718783,
+      -0.02856311299962594,
+      -0.0436601718585731,
+      0.06540996130725837
+    ],
+    "lower": [
+      0.11743497901277891,
+      0.11407387435937028,
+      0.13901928062472232,
+      0.15238701667168514,
+      0.10205314065305765,
+      0.24697718126384438,
+      0.1027235452257539,
+      0.21869547189177843,
+      0.1514195706707795,
+      0.1998712477494494,
+      -0.1446535639393834,
+      -0.13751820530870862,
+      -0.20360534088630186,
+      -0.05115176408620059,
+      -0.40542158444644905,
+      0.03446948642848407,
+      -0.24003889169906614,
+      -0.031419424299588536,
+      -0.04802618904443041,
+      0.058868965176532534
+    ],
+    "upper": [
+      0.1435316410156187,
+      0.1394236242170081,
+      0.16991245409688285,
+      0.18625079815428186,
+      0.12473161635373714,
+      0.30186099932247645,
+      0.12555099972036587,
+      0.26729446564550696,
+      0.1850683641531749,
+      0.24428708058266038,
+      -0.11835291595040459,
+      -0.11251489525257978,
+      -0.16658618799788336,
+      -0.041851443343255024,
+      -0.3317085690925492,
+      0.042129372301480526,
+      -0.19639545684469048,
+      -0.025706801699663346,
+      -0.03929415467271579,
+      0.07195095743798421
+    ],
+    "relative_half_range": 0.1
+  },
+  "models": {
+    "mlp": {
+      "file": "mlp-60b42438a950.f64.bin",
+      "sha256": "60b42438a950b3a90849899de9095c603949a9d0983508f1f316b02a94e2b3bd",
+      "bytes": 79024,
+      "source_url": "https://huggingface.co/ShuangheYang/rae2822-cst20-mlp-r05/resolve/53c8d763283360554a321995744c56245fdd50c9/models/learning/M04_deep64_n10000_s11/model.npz",
+      "source_npz_sha256": "68648a0c4d6f2807f37c766ed1f5d6487aaa788894bd0c84134622b37fb0a2f3",
+      "arrays": {
+        "weight::network.0.bias": {
+          "offset": 0,
+          "length": 64,
+          "shape": [
+            64
+          ]
+        },
+        "weight::network.0.weight": {
+          "offset": 64,
+          "length": 1280,
+          "shape": [
+            64,
+            20
+          ]
+        },
+        "weight::network.2.bias": {
+          "offset": 1344,
+          "length": 64,
+          "shape": [
+            64
+          ]
+        },
+        "weight::network.2.weight": {
+          "offset": 1408,
+          "length": 4096,
+          "shape": [
+            64,
+            64
+          ]
+        },
+        "weight::network.4.bias": {
+          "offset": 5504,
+          "length": 64,
+          "shape": [
+            64
+          ]
+        },
+        "weight::network.4.weight": {
+          "offset": 5568,
+          "length": 4096,
+          "shape": [
+            64,
+            64
+          ]
+        },
+        "weight::network.6.bias": {
+          "offset": 9664,
+          "length": 2,
+          "shape": [
+            2
+          ]
+        },
+        "weight::network.6.weight": {
+          "offset": 9666,
+          "length": 128,
+          "shape": [
+            2,
+            64
+          ]
+        },
+        "weight::skip.weight": {
+          "offset": 9794,
+          "length": 40,
+          "shape": [
+            2,
+            20
+          ]
+        },
+        "x_mean": {
+          "offset": 9834,
+          "length": 20,
+          "shape": [
+            20
+          ]
+        },
+        "x_scale": {
+          "offset": 9854,
+          "length": 20,
+          "shape": [
+            20
+          ]
+        },
+        "y_mean": {
+          "offset": 9874,
+          "length": 2,
+          "shape": [
+            2
+          ]
+        },
+        "y_scale": {
+          "offset": 9876,
+          "length": 2,
+          "shape": [
+            2
+          ]
+        }
+      },
+      "definition": {
+        "activation": "tanh",
+        "log_cd": false,
+        "layers": [
+          {
+            "weight": "weight::network.0.weight",
+            "bias": "weight::network.0.bias"
+          },
+          {
+            "weight": "weight::network.2.weight",
+            "bias": "weight::network.2.bias"
+          },
+          {
+            "weight": "weight::network.4.weight",
+            "bias": "weight::network.4.bias"
+          },
+          {
+            "weight": "weight::network.6.weight",
+            "bias": "weight::network.6.bias"
+          }
+        ],
+        "skip": "weight::skip.weight"
+      }
+    },
+    "kriging": {
+      "file": "kriging-0f780c890138.f64.bin",
+      "sha256": "0f780c89013818752d94484c49425673b01c904d0d56137d73fcca8bda85e022",
+      "bytes": 1760352,
+      "source_url": "https://huggingface.co/ShuangheYang/rae2822-cst20-kriging-r05/resolve/9161a31ef9eda1400af909b857da11c1359c7dbc/models/n10000_s11/model.npz",
+      "source_npz_sha256": "8777522fc8ce3789a03210980b0e36a683c43eac8d5105fe0f04ffcb70f1c021",
+      "arrays": {
+        "alpha_CD": {
+          "offset": 0,
+          "length": 10000,
+          "shape": [
+            10000
+          ]
+        },
+        "alpha_CL": {
+          "offset": 10000,
+          "length": 10000,
+          "shape": [
+            10000
+          ]
+        },
+        "x_mean": {
+          "offset": 20000,
+          "length": 20,
+          "shape": [
+            20
+          ]
+        },
+        "x_scale": {
+          "offset": 20020,
+          "length": 20,
+          "shape": [
+            20
+          ]
+        },
+        "x_train": {
+          "offset": 20040,
+          "length": 200000,
+          "shape": [
+            10000,
+            20
+          ]
+        },
+        "y_mean": {
+          "offset": 220040,
+          "length": 2,
+          "shape": [
+            2
+          ]
+        },
+        "y_scale": {
+          "offset": 220042,
+          "length": 2,
+          "shape": [
+            2
+          ]
+        }
+      },
+      "definition": {
+        "kernel": "matern52",
+        "parameters": [
+          {
+            "signal": 79.84446003218224,
+            "length_scale": 30.365197879816204
+          },
+          {
+            "signal": 705.9997285454024,
+            "length_scale": 53.43626741074632
+          }
+        ],
+        "training_points": 10000
+      }
+    }
+  }
+}

@@ -12,7 +12,7 @@ This project studies how predictive accuracy changes with training-set size in a
 | Trained MLP models | [MLP repository](https://huggingface.co/ShuangheYang/rae2822-cst20-mlp-r05) |
 | Trained Kriging models | [Kriging repository](https://huggingface.co/ShuangheYang/rae2822-cst20-kriging-r05) |
 | Illustrated research report | [PDF](https://huggingface.co/datasets/ShuangheYang/rae2822-cst20-cfl3d-fine/resolve/61bcbdd80989bca9260acba5c99b8fd0293200ee/research/report/R05_MLP_Kriging_report.pdf) |
-| Interactive explorer source | [docs/index.html](docs/index.html) |
+| Live prediction and interactive explorer | [Open website](https://shuangheyang.github.io/rae2822-surrogate-benchmark/#predict) |
 | Methods and interpretation | [METHODS.md](METHODS.md) |
 
 The benchmark uses the **fine** labels. The dataset also provides paired coarse results for multi-fidelity research. Neither the CFD-generation platform nor solver executables are included. Training and inference require no CFD installation.
@@ -46,7 +46,7 @@ python run.py --device cpu predict --family kriging --input configs/example_inpu
 
 `models` downloads only the two representative checkpoints. Downloads are anonymous, pinned to immutable Hugging Face commits and checked against SHA-256 hashes. No account, token or paid service is needed.
 
-Input JSON accepts a single array of 20 coefficients, a batch of such arrays, or `{"cst": [...]}`. The order is **U0–U9, L0–L9**. Output columns are `CL`, `CD`, `L_D`. Coefficients outside the published design box trigger an extrapolation warning. Arbitrary coordinates must first be normalized and fitted to the same CST definition; the predictor does not interpret images or coordinate arrays as CST coefficients.
+Input JSON accepts a single array of 20 coefficients, a batch of such arrays, or `{"cst": [...]}`. The order is **U0–U9, L0–L9**. Output columns are `CL`, `CD`, `L_D`. Coefficients outside the published design box trigger an extrapolation warning. This Python command accepts CST coefficients; use the browser interface below to normalize and fit coordinate files.
 
 To use a newly trained model, pass its NPZ path with `--model`. Model files use pickle-free NumPy serialization.
 
@@ -101,13 +101,27 @@ python run.py --device cpu smoke
 python src/test_kriging_engine.py
 ```
 
-These checks use small synthetic arrays, not CFD training data. They cover CPU optimization, scaling, serialization, resume guards, GP mean/variance and marginal likelihood against scikit-learn, analytic kernel gradients, and CPU/GPU agreement when CUDA is available. GitHub Actions runs the CPU checks.
+These checks use small synthetic arrays, not CFD training data. They cover CPU optimization, scaling, serialization, resume guards, GP mean/variance and marginal likelihood against scikit-learn, analytic kernel gradients, and CPU/GPU agreement when CUDA is available. GitHub Actions runs the CPU checks and the browser numerical checks (`node tests/browser_core.mjs`, Node.js 24).
 
 See [VALIDATION.md](VALIDATION.md) for the release checks and their limits.
 
 ## Interactive presentation
 
-`docs/` is a self-contained static explorer with an airfoil selector, saved per-case predictions, and switchable learning curves. The interface displays **saved test predictions**, not new server-side inference. It uses no analytics or external JavaScript libraries.
+The [website](https://shuangheyang.github.io/rae2822-surrogate-benchmark/#predict) provides **new predictions directly in your browser**, alongside the saved-case explorer and learning curves. No installation, account, API token or paid inference service is needed. Input values and coordinate files stay in the browser. Only static model files are downloaded; no geometry is sent to a prediction server. The site uses no analytics or external JavaScript libraries.
+
+1. In **Predict**, choose **20 CST coefficients** or **Airfoil coordinates**.
+2. Paste 20 signed values in U0–U9, L0–L9 order, or paste/load a coordinate text file. The baseline examples and **Use selected test case** button provide working inputs.
+3. For coordinates, choose chord normalization. Use the default only for an unrotated, horizontally aligned airfoil; for rotated data, select manual leading/trailing-edge coordinates.
+4. Click **Predict aerodynamic coefficients** or **Fit CST & predict**. MLP returns CL, CD and their ratio. Check **Also compare Kriging** to compute the second model's prediction.
+5. Inspect the geometry, coordinate-fit errors and domain status. Download a JSON record if desired. Editing the input clears the previous result.
+
+Supported coordinate layouts are an ordered two-column contour (`x y`, Selig style), Lednicer upper/lower blocks with point counts, and three columns `x y_upper y_lower`. Lower ordinates must carry their negative signs where applicable. An optional airfoil-name header, comments, scientific notation and comma-separated numeric fields are accepted. At least 30 distinct x positions per surface are required. This is coordinate input, not image recognition.
+
+Normalization uses one chord length for **both axes**, preserving thickness and camber. Coordinates must cover both surfaces and have a closed leading and trailing edge. The fit uses the same degree-9 CST definition as training, with unconstrained least squares; coefficients are never clipped to the training box. The interface rejects fits with surface RMSE above 0.0005 chord or maximum point deviation above 0.002 chord. These are engineering screening thresholds, not aerodynamic accuracy guarantees. A good geometry fit can still lie outside the learned RAE2822 neighborhood. Such predictions require explicitly enabling **out-of-domain exploration** and remain unvalidated.
+
+The models represent the **fine CFL3D condition: Mach 0.73, Reynolds number 6,500,000, angle of attack 2.79 degrees**. They do not accept a new operating condition or run CFD. New input has no reference CFD label, so the live panel reports predictions and fitting diagnostics, not an actual prediction error. The separate saved-case explorer compares stored predictions with known CFD labels.
+
+Browser inference uses the original unquantized float64 weights: approximately 79 KB for MLP and an optional 1.76 MB for exact Kriging with all 10,000 training centers. A Web Worker performs fitting and inference. The browser downloads and verifies each model's SHA-256 before use. The browser implementation was compared against all 1,500 released test predictions; see [VALIDATION.md](VALIDATION.md).
 
 Preview locally:
 
@@ -115,7 +129,7 @@ Preview locally:
 python -m http.server 8000 --directory docs
 ```
 
-Open `http://localhost:8000`. On a public GitHub repository, select **Settings → Pages → Deploy from a branch → main → /docs**. GitHub Pages hosts this static site on the free plan. Python training and inference are run locally; they are not executed by Pages. See [PUBLISHING.md](PUBLISHING.md).
+Open `http://localhost:8000/#predict` in a current browser; do not double-click the HTML as a `file://` document. The public deployment uses free GitHub Pages. Training still runs locally in Python; the website computes inference in the visitor's browser. See [PUBLISHING.md](PUBLISHING.md) for deployment and model export.
 
 ## Repository map
 
@@ -135,8 +149,13 @@ Open `http://localhost:8000`. On a public GitHub repository, select **Settings �
 | `predict.py`, `verify_pretrained.py` | Inference and released-prediction verification |
 | `export_results.py` | Excel metrics, learning curves and case-level predictions |
 | `build_explorer.py` | Generate the browser data payload from frozen evidence |
+| `export_browser_models.py` | Export the pinned trained checkpoints to float64 browser assets |
 | `src/test_kriging_engine.py`, `tests/smoke.py` | Numerical and portability checks |
-| `docs/` | Static interactive explorer and figures |
+| `tests/browser_core.mjs` | All-test-case inference parity and coordinate-fitting checks |
+| `docs/inference-core.mjs`, `docs/geometry-core.mjs` | Browser model equations, coordinate parsing, normalization and CST fitting |
+| `docs/inference-worker.mjs`, `docs/predict-ui.mjs` | Background computation, input handling and prediction display |
+| `docs/assets/inference/` | Model manifest, source hashes and unquantized browser weights |
+| `docs/` | Interactive prediction website, saved explorer and figures |
 | `runs/` | Local downloaded/generated files; excluded from Git |
 
 ## Evidence and scope
@@ -147,6 +166,6 @@ All budgets use 500 extra validation labels. MLP configurations were selected at
 
 ## License and citation
 
-Repository code is licensed under [MIT](LICENSE). Data, trained weights and downloaded research artifacts are distributed separately through Hugging Face; their terms are governed by those repositories. This code license does not relabel those external assets or grant rights to the private CFD platform.
+Repository code is licensed under [MIT](LICENSE). Data, trained weights and downloaded research artifacts are governed by their source Hugging Face repositories. The browser model files in `docs/assets/inference/` are unquantized exports of those published weights, with source revisions and hashes recorded in the manifest; their source terms still apply. This code license does not relabel those assets or grant rights to the private CFD platform.
 
 Use [CITATION.cff](CITATION.cff) to cite this software, and cite the data/model repository revision used in your experiment. Source mappings and adaptation notes are recorded in [PROVENANCE.json](PROVENANCE.json).

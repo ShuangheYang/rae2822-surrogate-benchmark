@@ -1,4 +1,4 @@
-/* Static evidence explorer. It never fits or executes a surrogate model. */
+/* Saved-evidence explorer. Live inference is handled separately by predict-ui.mjs. */
 'use strict';
 const $ = id => document.getElementById(id);
 const NS = 'http://www.w3.org/2000/svg';
@@ -62,6 +62,8 @@ async function main(){
     const response=await fetch('assets/benchmark.json');if(!response.ok)throw new Error(`HTTP ${response.status}`);data=await response.json();
     for(let i=0;i<data.cases.length;i++){const option=document.createElement('option');option.value=String(i);option.textContent=`LHS_2000:${data.cases[i].id}`;$('case').append(option);}
     $('case').disabled=false;$('previous').disabled=false;$('next').disabled=false;
+    $('use-explorer').disabled=false;
+    window.addEventListener('request-cst-example',()=>window.dispatchEvent(new CustomEvent('cst-example',{detail:data.cases[Number($('case').value)]})));
     $('case').addEventListener('change',drawAirfoil);$('baseline').addEventListener('change',drawAirfoil);$('metric').addEventListener('change',drawCurve);
     for(const [id,step] of [['previous',-1],['next',1]])$(id).addEventListener('click',()=>{$('case').value=String((Number($('case').value)+step+data.cases.length)%data.cases.length);drawAirfoil();});
     drawAirfoil();drawCurve();$('status').textContent=`Loaded ${data.test_n.toLocaleString()} test geometries · frozen representative models · saved predictions`;

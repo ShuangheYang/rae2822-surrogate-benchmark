@@ -6,10 +6,12 @@
   <meta name="description" content="Explore CST airfoil geometry, aerodynamic surrogate predictions, and MLP–Kriging learning curves.">
   <title>RAE2822 · Surrogate Benchmark</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="predict.css">
   <script defer src="app.js"></script>
+  <script type="module" src="predict-ui.mjs"></script>
 </head>
 <body>
-<header><a class="brand" href="#">RAE2822 <span>/ SURROGATE BENCHMARK</span></a><nav><a href="#explorer">Airfoils</a><a href="#learning">Learning curves</a><a href="https://github.com/ShuangheYang/rae2822-surrogate-benchmark">Code ↗</a></nav></header>
+<header><a class="brand" href="#">RAE2822 <span>/ SURROGATE BENCHMARK</span></a><nav><a href="#predict">Predict</a><a href="#explorer">Airfoils</a><a href="#learning">Learning curves</a><a href="https://github.com/ShuangheYang/rae2822-surrogate-benchmark">Code ↗</a></nav></header>
 <main>
   <section class="hero">
     <p class="eyebrow">AERODYNAMICS · DATA · MACHINE LEARNING</p>
@@ -20,6 +22,37 @@
     <div class="links"><a href="https://huggingface.co/datasets/ShuangheYang/rae2822-cst20-cfl3d-fine">Explore the dataset ↗</a><a href="https://huggingface.co/datasets/ShuangheYang/rae2822-cst20-cfl3d-fine/resolve/61bcbdd80989bca9260acba5c99b8fd0293200ee/research/report/R05_MLP_Kriging_report.pdf">Read the illustrated report ↗</a></div>
   </section>
   <p id="status" role="status">Loading verified experiment records…</p>
+  <section id="predict" class="panel">
+    <p class="eyebrow">LIVE MODEL INFERENCE / RUNS IN YOUR BROWSER</p>
+    <h2>Predict your airfoil.</h2>
+    <p>Enter 20 CST coefficients or surface coordinates. The released MLP calculates lift, drag and their ratio locally; optionally compare the trained Kriging model. No account, GPU service or paid API is needed.</p>
+    <p class="condition">Fixed condition: Mach 0.73 · Re 6,500,000 · angle of attack 2.79° · CFL3D fine labels</p>
+    <form id="live-form">
+      <fieldset class="mode-picker"><legend>Geometry input</legend><label><input type="radio" name="input-mode" value="cst" checked> 20 CST coefficients</label><label><input type="radio" name="input-mode" value="coordinates"> Airfoil coordinates</label></fieldset>
+      <div class="controls examples"><button type="button" id="example-cst">CST example</button><button type="button" id="example-coordinates">Coordinate example</button><button type="button" id="use-explorer" disabled>Use selected test airfoil</button></div>
+      <label for="custom-input" id="input-label">20 CST coefficients · U0–U9, L0–L9</label>
+      <textarea id="custom-input" rows="7" maxlength="1000000" spellcheck="false" aria-describedby="input-help" required></textarea>
+      <p id="input-help" class="caption">CST order: U0…U9, L0…L9. Coordinate formats: ordered x y contour (Selig), Lednicer with point counts, or x y_upper y_lower. Lower ordinates must be signed. Each surface needs ≥30 distinct x positions and both endpoints. Image inputs and unordered point clouds are not supported.</p>
+      <div id="coordinate-options" hidden>
+        <div class="controls"><label>Load a text file <input id="coordinate-file" type="file" accept=".dat,.txt,.csv"></label><label>Coordinate normalization <select id="coordinate-mode"><option value="aligned">Horizontal chord · automatic scale and translation</option><option value="normalized">Already normalized · LE (0,0), TE (1,0)</option><option value="manual">Explicit LE/TE · rotated or translated coordinates</option></select></label></div>
+        <label id="manual-chord" hidden>Chord endpoints: x_LE y_LE x_TE y_TE<input id="chord-points" type="text" placeholder="0 0 1 0"></label>
+        <p class="caption">One chord length scales both axes. Specifying rotated endpoints changes the coordinate frame, not the model angle of attack. Coordinates are fitted by unconstrained least squares; no coefficients are clipped into the training box.</p>
+      </div>
+      <div class="controls"><label><input id="compare-kriging" type="checkbox"> Also predict with Kriging (1.76 MB model)</label><label><input id="allow-outside" type="checkbox"> Allow out-of-domain exploration</label></div>
+      <button id="predict-submit" class="primary" type="submit">Predict aerodynamic coefficients</button>
+    </form>
+    <p id="live-status" class="note" role="status" aria-live="polite">Enter your geometry or load an example.</p>
+    <div id="live-output" hidden>
+      <div class="plot"><svg id="live-airfoil" viewBox="0 0 1000 300" role="img" aria-label="Custom input and fitted CST geometry"></svg></div>
+      <p class="caption">Purple: model-input CST shape. Teal dots: normalized coordinates, when supplied. Both axes use the same geometric scale.</p>
+      <p id="live-geometry-info" class="caption"></p><p id="fit-info" class="note" hidden></p>
+      <div id="live-result-table" class="table-wrap" hidden><table><thead><tr><th>Quantity</th><th>MLP prediction</th><th>Kriging prediction</th></tr></thead><tbody id="live-predictions"></tbody></table></div>
+      <p id="prediction-disclaimer" class="caption" hidden>Surrogate predictions at the fixed flow condition above. Aerodynamic error requires an independent CFD or experimental reference. Coordinate-fit errors measure geometry only.</p>
+      <details><summary>Model-input CST coefficients</summary><pre id="fitted-cst"></pre></details>
+      <button id="save-prediction" type="button" disabled>Download prediction JSON</button>
+    </div>
+    <details><summary>Coordinate fitting and model scope</summary><p>The CST class function is x<sup>0.5</sup>(1−x), with a degree-9 Bernstein polynomial per surface and closed leading/trailing edges. Coordinate acceptance limits are surface RMSE ≤0.0005 c and maximum deviation ≤0.002 c. These are engineering checks on geometry, not aerodynamic error bounds. A good fit does not imply that an unrelated airfoil lies in the RAE2822 training domain. Finite trailing-edge thickness is not silently removed. Your input is processed locally and is not uploaded; only model assets are downloaded.</p></details>
+  </section>
   <section id="explorer" class="panel">
     <p class="eyebrow">01 / INTERACTIVE AIRFOIL EXPLORER</p>
     <h2>Inspect a test geometry.</h2>
@@ -29,7 +62,7 @@
     <p class="caption">Normalized coordinates; equal horizontal and vertical geometric scales. Purple: selected airfoil. Dashed gray: baseline.</p>
     <div class="table-wrap"><table><thead><tr><th>Quantity</th><th>Fine CFD label</th><th>MLP</th><th>MLP APE</th><th>Kriging</th><th>Kriging APE</th></tr></thead><tbody id="predictions"></tbody></table></div>
     <details><summary>CST coefficients · U0–U9, L0–L9</summary><pre id="coefficients"></pre></details>
-    <p class="note">These are stored benchmark predictions, not live CFD or server-side model inference. C<sub>L</sub>/C<sub>D</sub> is calculated from the two predicted coefficients.</p>
+    <p class="note">Saved test predictions are compared with fine CFD labels. APE is the absolute percentage error. C<sub>L</sub>/C<sub>D</sub> is calculated from the two predicted coefficients.</p>
   </section>
   <section id="learning" class="panel">
     <p class="eyebrow">02 / DATA AND PREDICTIVE ACCURACY</p><h2>How does accuracy change with data?</h2>

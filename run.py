@@ -32,6 +32,7 @@ def main():
             "smoke",
             "verify",
             "explorer",
+            "browser-models",
         ],
     )
     args, remaining = parser.parse_known_args()
@@ -64,6 +65,7 @@ def main():
         "smoke": ("tests/smoke.py", []),
         "verify": ("verify_pretrained.py", []),
         "explorer": ("build_explorer.py", []),
+        "browser-models": ("export_browser_models.py", []),
     }
     script, defaults = table[args.command]
     sys.argv = [str(PROJECT / script), *defaults, *remaining]
